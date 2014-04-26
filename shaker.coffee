@@ -10,13 +10,13 @@ defaults =
   direction : "horizontal"
   concave : false
   flat : false
-  multiplier : ( i, t ) ->
-      ( t - i ) / t
+  shakeModifier : ( step, totalSteps ) ->
+      ( totalSteps - step ) / totalSteps
 
 class Shaker
   constructor : ( opts ) ->
     settings = $.extend {}, defaults, opts
-    { @amount, @shakes, @className, @animationName, @duration, @direction, @concave, @multiplier, @flat } = settings
+    { @amount, @shakes, @className, @animationName, @duration, @direction, @concave, @shakeModifier, @flat } = settings
     @makeRules()
     @makeSheet()
   
@@ -50,10 +50,10 @@ class Shaker
       if @concave then d = -1 * d
        
       # calculate rotate amount, add unit
-      rotate = if @flat then 0 else @multiplier( i, @shakes ) * d * o * 90 * @amount / 100 + "deg"
+      rotate = if @flat then 0 else @shakeModifier( i, @shakes ) * d * o * 90 * @amount / 100 + "deg"
       
       # calculate translate amount, add unit
-      translate = @multiplier( i, @shakes ) * o * @amount + "%"
+      translate = @shakeModifier( i, @shakes ) * o * @amount + "%"
 
       # add rule to CSS string
       str += "transform: #{ @translate }(#{translate}) #{ @rotate }(#{rotate});\n}\n"
@@ -62,14 +62,11 @@ class Shaker
     str += "}\n"
 
     @keyframesRule = str
-    @classRule = ".#{ @className } { animation-name: #{ @animationName }; animation-duration: #{ @duration }s }"
+    @classRule = ".#{ @className } { animation-name: #{ @animationName };\n animation-duration: #{ @duration }s; }"
     
   makeSheet : ->
     @stylesheet = document.createElement "style"
-    @stylesheet.innerHTML = """
-#{ @keyframesRule }
-#{ @classRule }
-    """
+    @stylesheet.appendChild document.createTextNode "#{ @keyframesRule }\n #{ @classRule }"
     document.getElementsByTagName( "head" )[0].appendChild @stylesheet
     StyleFix.styleElement @stylesheet
     

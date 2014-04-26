@@ -11,8 +11,8 @@
     direction: "horizontal",
     concave: false,
     flat: false,
-    multiplier: function(i, t) {
-      return (t - i) / t;
+    shakeModifier: function(step, totalSteps) {
+      return (totalSteps - step) / totalSteps;
     }
   };
 
@@ -20,7 +20,7 @@
     function Shaker(opts) {
       var settings;
       settings = $.extend({}, defaults, opts);
-      this.amount = settings.amount, this.shakes = settings.shakes, this.className = settings.className, this.animationName = settings.animationName, this.duration = settings.duration, this.direction = settings.direction, this.concave = settings.concave, this.multiplier = settings.multiplier, this.flat = settings.flat;
+      this.amount = settings.amount, this.shakes = settings.shakes, this.className = settings.className, this.animationName = settings.animationName, this.duration = settings.duration, this.direction = settings.direction, this.concave = settings.concave, this.shakeModifier = settings.shakeModifier, this.flat = settings.flat;
       this.makeRules();
       this.makeSheet();
     }
@@ -51,18 +51,18 @@
         if (this.concave) {
           d = -1 * d;
         }
-        rotate = this.flat ? 0 : this.multiplier(i, this.shakes) * d * o * 90 * this.amount / 100 + "deg";
-        translate = this.multiplier(i, this.shakes) * o * this.amount + "%";
+        rotate = this.flat ? 0 : this.shakeModifier(i, this.shakes) * d * o * 90 * this.amount / 100 + "deg";
+        translate = this.shakeModifier(i, this.shakes) * o * this.amount + "%";
         str += "transform: " + this.translate + "(" + translate + ") " + this.rotate + "(" + rotate + ");\n}\n";
       }
       str += "}\n";
       this.keyframesRule = str;
-      return this.classRule = "." + this.className + " { animation-name: " + this.animationName + "; animation-duration: " + this.duration + "s }";
+      return this.classRule = "." + this.className + " { animation-name: " + this.animationName + ";\n animation-duration: " + this.duration + "s; }";
     };
 
     Shaker.prototype.makeSheet = function() {
       this.stylesheet = document.createElement("style");
-      this.stylesheet.innerHTML = "" + this.keyframesRule + "\n" + this.classRule;
+      this.stylesheet.appendChild(document.createTextNode("" + this.keyframesRule + "\n " + this.classRule));
       document.getElementsByTagName("head")[0].appendChild(this.stylesheet);
       return StyleFix.styleElement(this.stylesheet);
     };

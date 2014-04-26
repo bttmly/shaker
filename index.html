@@ -136,28 +136,29 @@
   <script src="demo-assets/jquery.js"></script>
   <script src="shaker.js"></script>
   <script type="text/javascript">
+    (function() {
 
-  (function() {
-    var counter = 0;
-    $( "#shake" ).click( function() {
+      var counter = 0;
+      
+      $( "#shake" ).click( function() {
 
-      var shaker = new Shaker({
-        amount : +$( "#amountInput" ).val(),
-        shakes : +$( "#stepsInput" ).val(),
-        animationName : "shake-" + ( ++counter ),
-        className : "shake-" + counter,
-        direction : $( "[name='directionOptions']:checked" ).val(),
-        duration : $( "#durationInput" ).val()
+        var shaker = new Shaker({
+          amount : +$( "#amountInput" ).val(),
+          shakes : +$( "#stepsInput" ).val(),
+          animationName : "shake-" + ( ++counter ),
+          className : "shake-" + counter,
+          direction : $( "[name='directionOptions']:checked" ).val(),
+          duration : $( "#durationInput" ).val()
+        });
+
+        shaker.shake( $( "#panel" ), function() {
+          console.log( "Shake complete!" );
+          shaker.destroySheet();
+        });
+
       });
 
-      shaker.shake( $( "#panel" ), function() {
-        console.log( "Shake complete!" );
-        shaker.destroySheet();
-      });
-
-    });
-
-  }());
+    }());
 
   </script>
 </body>
