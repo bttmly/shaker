@@ -26,7 +26,7 @@
     width: 20em;
     background: white;
     border-radius: 0.5em;
-    box-shadow: 0 0.5em 1em 0.5em rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0.5em 1em 0.5em rgba(0, 0, 0, 0.4);
     transition: all 0.2s ease-in-out;
     animation-duration: 0.4s;
     animation-iteration-count: 1;
@@ -122,15 +122,14 @@
 
       var shaker = new Shaker({
         amount : +$( "#amountInput" ).val(),
-        steps : +$( "#stepsInput" ).val(),
+        shakes : +$( "#stepsInput" ).val(),
         animationName : "shake-" + ( ++counter ),
         className : "shake-" + counter,
-        direction: $( "[name='directionOptions']:checked" ).val()
+        direction : $( "[name='directionOptions']:checked" ).val(),
+        duration : $( "#durationInput" ).val()
       });
 
-      shaker.shake( $( "#panel" ), {
-        animationDuration: $( "#durationInput" ).val() + "s"
-      }, function() {
+      shaker.shake( $( "#panel" ), function() {
         console.log( "Shake complete!" );
         shaker.destroySheet();
       });
