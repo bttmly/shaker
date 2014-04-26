@@ -25,16 +25,14 @@ var shaker = new Shaker({
 ```javascript
 shaker.shake( $("#panel" ), function( el ) {
   // "this" is the shaker
-  this.removeSheet(); // remove the inserted stylesheet
 });
 
 // or 
 
 $( "#panel" ).shakeWith( shaker, function( el ) {
   // "this" is the shaker
-  this.removeSheet(); // remove the inserted stylesheet  
 });
 
 ```
 
-Using it as a jQuery plugin is a little unintuitive, since the callback is called in the context of the shaker, not the jQuery object on which .shakeWith is called, which is atypical for jQuery plugins.
+Using it as a jQuery plugin is a little counterintuitive, since the callback is called in the context of the _shaker_ rather than the jQuery object on which .shakeWith is called. This is an atypical pattern for jQuery plugins. Might switch so that the jQuery plugin version has the expected behavior. Caveat is that then there are substantial differences hen using Shaker::shake and $.shakeWith.
