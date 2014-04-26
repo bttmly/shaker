@@ -30,6 +30,7 @@
     transition: all 0.2s ease-in-out;
     animation-duration: 0.4s;
     animation-iteration-count: 1;
+    position: relative;
   }
 
   .panel__title {
@@ -64,6 +65,20 @@
     font-weight: 300;
     font-style: italic;
   }
+
+  .source-link {
+    position: absolute;
+    bottom: -4em;
+    width: 100%;
+    left: 0;
+    font-size: 16px;
+  }
+
+  .source-link a {
+    color: white;
+  }
+
+
 </style>
 
 <body>
@@ -74,6 +89,7 @@
       </h1>
       <p>Play with the controls and see what it can do.</p>
     </div>
+
     <div id="panel" class="inner">
       <div class="fluid-container">
         <div class="row">
@@ -108,7 +124,11 @@
         </div>
       </div>
       <button id="shake" class="btn btn-block btn-success btn-lg">Shake</button>
+      <p class="source-link">
+        <a href="https://github.com/nickb1080/shaker">Source on GitHub</a>
+      </p>
     </div>
+
   </div>
 
   <script src="demo-assets/prefixfree.min.js"></script>
