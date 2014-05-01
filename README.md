@@ -23,18 +23,23 @@ var shaker = new Shaker({
 
 **Usage**
 ```javascript
-shaker.shake( $("#panel" ), function( el ) {
+shaker.shake( document.getElementById( "id" ), function( el ) {
   // "this" is the shaker
   this.removeSheet(); // remove the inserted stylesheet
 });
 
-// or 
-
-$( "#panel" ).shakeWith( shaker, function( el ) {
-  // "this" is the shaker
-  this.removeSheet(); // remove the inserted stylesheet  
-});
-
 ```
 
-Using it as a jQuery plugin is a little unintuitive, since the callback is called in the context of the shaker, not the jQuery object on which .shakeWith is called, which is atypical for jQuery plugins.
+## jQuery plugin
+You can implement your own jQuery plugin, maybe like so (untested):
+```javascript
+$.fn.shakeWith = function( shaker, opts, cb) {
+  $( this ).each( function( e ) {
+    var args = [].slice.call( arguments );
+    args.shift();
+    args.unshift( e );
+    shaker.shake.apply( shaker, args );
+  });
+};
+
+```

@@ -1,6 +1,27 @@
 # requires jQuery http://code.jquery.com/jquery-2.1.0.min.js
 # requires StyleFix (bundled with PrefixFree) https://raw.github.com/LeaVerou/prefixfree/gh-pages/prefixfree.min.js
 
+# adapted from http://youmightnotneedjquery.com/
+extend = ( out ) ->
+  out or= {}
+  i = 1
+  while i < arguments.length
+    continue  unless arguments[i]
+    for own key of arguments[i]
+      out[key] = arguments[i][key]
+    i++
+  out
+
+# adapted from http://justjson.blogspot.com/2013/08/css-animation-detect-animation-end.html
+animEnd = do ( d = document.createElement "div" ) ->
+  eventNames =
+    'animation': 'animationend',
+    '-o-animation': 'oAnimationEnd',
+    '-moz-animation': 'animationend',
+    '-webkit-animation': 'webkitAnimationEnd'
+  for prop, evt of eventNames
+    return evt if d.style[prop]?
+
 defaults =
   amount : 5
   shakes : 5
@@ -15,7 +36,7 @@ defaults =
 
 class Shaker
   constructor : ( opts ) ->
-    settings = $.extend {}, defaults, opts
+    settings = extend {}, defaults, opts
     { @amount, @shakes, @className, @animationName, @duration, @direction, @concave, @shakeModifier, @flat } = settings
     @makeRules()
     @makeSheet()
@@ -73,21 +94,27 @@ class Shaker
   destroySheet : ->
     document.getElementsByTagName( "head" )[0].removeChild @stylesheet
     
-  shake : do ->
-    animStart = "webkitAnimationStart oanimationstart msAnimationStart animationstart"
-    animEnd = "webkitAnimationEnd oanimationend msAnimationEnd animationend"
-    ( el, cb ) ->
-      el.addClass @className
-      el.one animEnd, =>
-        el.removeClass @className
-        if cb then cb.bind( @ )( el )
+  shake : ( el, cb ) ->
 
-# use this to shake jQuery OO style.
-$.fn.shakeWith = ( shaker, opts, cb ) ->
-  $( this ).each ( e ) ->
-    args = [].slice.call( arguments )
-    args.shift()
-    args.unshift e
-    shaker.shake.apply shaker, args 
+      handler = ( ->
+        el.classList.remove @className
+        if cb then cb.bind( @ )( el )
+        el.removeEventListener animEnd, handler
+      ).bind( @ )
+
+      el.classList.add @className
+      el.addEventListener animEnd, handler
 
 this.Shaker = Shaker
+
+
+getStyle = (oElm, strCssRule) ->
+  strValue = ""
+  if document.defaultView and document.defaultView.getComputedStyle
+    strValue = document.defaultView.getComputedStyle(oElm, "").getPropertyValue(strCssRule)
+  else if oElm.currentStyle
+    strCssRule = strCssRule.replace(/\-(\w)/g, (strMatch, p1) ->
+      p1.toUpperCase()
+    )
+    strValue = oElm.currentStyle[strCssRule]
+  strValue

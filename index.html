@@ -133,28 +133,35 @@
   </div>
 
   <script src="demo-assets/prefixfree.min.js"></script>
-  <script src="demo-assets/jquery.js"></script>
   <script src="shaker.js"></script>
   <script type="text/javascript">
+
+    // declare these out here so we can inspect them in the console.
+    var shaker;
+    var el;
+
     (function() {
 
       var counter = 0;
       
-      $( "#shake" ).click( function() {
+      document.getElementById( "shake" ).addEventListener( "click", function() {
+        
+        el = document.getElementById( "panel" );
 
-        var shaker = new Shaker({
-          amount : +$( "#amountInput" ).val(),
-          shakes : +$( "#stepsInput" ).val(),
+        shaker = new Shaker({
+          amount : +document.getElementById( "amountInput" ).value,
+          shakes : +document.getElementById( "stepsInput" ).value,
           animationName : "shake-" + ( ++counter ),
           className : "shake-" + counter,
-          direction : $( "[name='directionOptions']:checked" ).val(),
-          duration : $( "#durationInput" ).val()
+          direction : document.querySelector( "[name='directionOptions']:checked" ).value,
+          duration : document.getElementById( "durationInput" ).value
         });
 
-        shaker.shake( $( "#panel" ), function() {
+        shaker.shake( el, function() {
           console.log( "Shake complete!" );
           shaker.destroySheet();
         });
+
 
       });
 
