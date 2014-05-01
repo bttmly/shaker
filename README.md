@@ -18,19 +18,14 @@ var shaker = new Shaker({
   flat : false // shaking in 3d is cooler anyway
   concave : false // change at your own risk
 });
-
 ```
 
 **Usage**
 ```javascript
 shaker.shake( document.getElementById( "id" ), function( el ) {
   // "this" is the shaker
-  this.removeSheet(); // remove the inserted stylesheet
 });
 
-```
-
-## jQuery plugin
 You can implement your own jQuery plugin, maybe like so (untested):
 ```javascript
 $.fn.shakeWith = function( shaker, opts, cb) {
@@ -41,5 +36,3 @@ $.fn.shakeWith = function( shaker, opts, cb) {
     shaker.shake.apply( shaker, args );
   });
 };
-
-```
