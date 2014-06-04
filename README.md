@@ -25,6 +25,7 @@ var shaker = new Shaker({
 shaker.shake( document.getElementById( "id" ), function( el ) {
   // "this" is the shaker
 });
+```
 
 You can implement your own jQuery plugin, maybe like so (untested):
 ```javascript
@@ -36,3 +37,4 @@ $.fn.shakeWith = function( shaker, opts, cb) {
     shaker.shake.apply( shaker, args );
   });
 };
+```
